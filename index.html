@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Ubuntu&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script
+      src="https://kit.fontawesome.com/8e450da62e.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script defer type="module" src="/app.js"></script>
+  </head>
+
+  <body class="bg-slate-100">
+    <section
+      class="navbar bg-slate-50 flex justify-around items-center sm:items-center"
+    >
+      <div class="logo my-3 text-lg sm:text-2xl font-ubnutu font-bold">
+        Expense Tracker
+      </div>
+      <div class="month--picker font-semibold text-sm sm:text-xl">
+        Your overview for:
+        <select name="" id="select--month">
+          <option value="0">January</option>
+          <option value="1">February</option>
+          <option value="2">March</option>
+          <option value="3">April</option>
+          <option value="4">May</option>
+          <option value="5">June</option>
+          <option value="6">July</option>
+          <option value="7">August</option>
+          <option value="8">September</option>
+          <option value="9">October</option>
+          <option value="10">Novemver</option>
+          <option value="11">December</option>
+        </select>
+      </div>
+    </section>
+
+    <section
+      class="daily-reports flex flex-col justify-center items-center xl:flex-row sm:mx-5 my-5"
+    >
+      <div
+        class="flex flex-col w-11/12 xl:w-3/4 max-w-3xl rounded-lg bg-white shadow-md sm:mx-5 my-3"
+      >
+        <div
+          class="mx-2 py-3 border-b-2 font-open-sans font-bold sm:mx-10 sm:py-4 text-lg xl:text-2xl"
+        >
+          Activity
+        </div>
+        <div
+          class="relative w-full h-56 sm:h-72 p-1 md:h-80 max-h-[1000px] max-w-[2000px] flex justify-center sm:py-3 sm:px-5 md:px-10"
+        >
+          <canvas id="line-graph" width="" height=""> </canvas>
+        </div>
+      </div>
+      <div
+        class="flex flex-col bg-white rounded-lg shadow-md sm:text-lg mx-5 my-3 w-11/12 xl:w-[30rem] max-w-3xl"
+      >
+        <div class="flex justify-between mx-2 py-3 border-b-2 sm:mx-10 sm:py-4">
+          <div class="font-open-sans font-bold text-lg xl:text-2xl">
+            Budget Split
+          </div>
+          <div class="text-sm w-max flex text-gray-700">
+            <select
+              class="bg-gray-300 rounded-md p-1 xl:p-2 font-bold"
+              name=""
+              id="tag--type"
+            >
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
+        </div>
+        <div class="relative mx-auto flex w-full justify-center">
+          <canvas
+            class="overflow-visible"
+            id="myChart"
+            width="257"
+            height="320"
+          >
+          </canvas>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="cards flex flex-col xl:flex-row justify-center items-center sm:mx-5 mb-10 mt-1"
+    >
+      <div
+        class="flex flex-col xl:flex-row justify-center w-11/12 max-w-3xl xl:max-w-[1310px] xl:w-full h-full"
+      >
+        <div
+          class="flex flex-row justify-evenly xl:flex-col w-full xl:order-1 xl:w-2/5 xl:ml-5 xl:mr-3"
+        >
+          <div
+            class="h-32 xl:h-56 rounded-md shadow-md shadow-[#16794b] bg-gradient-to-r bg-green-600 bg-opacity-90 flex flex-col items-center justify-evenly my-2 w-1/3 xl:w-full"
+          >
+            <div class="flex justify-center items-center">
+              <i
+                class="text-white fas fa-money-bill-1-wave text-xl md:text-2xl xl:text-5xl"
+              ></i>
+            </div>
+            <div
+              class="flex text-white text-lg sm:text-2xl xl:text-5xl font-bold"
+            >
+              <p class="mx-1 currency">&#8377;</p>
+              <div class="counter income-card" data-target="">0</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <h1 class="text-white text-xs md:text-sm xl:text-lg">Income</h1>
+            </div>
+          </div>
+          <div
+            class="h-32 xl:h-56 rounded-md shadow-md shadow-[#af1e2c] bg-gradient-to-r bg-red-600 bg-opacity-90 flex flex-col justify-evenly items-center mx-2 my-2 w-1/3 xl:w-full xl:mx-0"
+          >
+            <div class="flex justify-center items-center">
+              <i
+                class="text-white fas fa-wallet text-xl md:text-2xl xl:text-5xl"
+              ></i>
+            </div>
+            <div
+              class="flex text-white text-lg sm:text-2xl xl:text-5xl font-bold"
+            >
+              <p class="mx-1">&#8377;</p>
+              <div class="counter expense-card" data-target="">0</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <h1 class="text-white text-xs md:text-sm lg:text-lg">Expenses</h1>
+            </div>
+          </div>
+          <div
+            class="h-32 xl:h-56 rounded-md shadow-md shadow-[#242b85] bg-gradient-to-r bg-blue-800 bg-opacity-90 flex flex-col justify-evenly items-center my-2 w-1/3 xl:w-full"
+          >
+            <div class="flex justify-center items-center">
+              <i
+                class="text-white fas fa-piggy-bank text-xl md:text-2xl xl:text-5xl"
+              ></i>
+            </div>
+            <div
+              class="flex text-white text-lg sm:text-2xl xl:text-5xl font-bold"
+            >
+              <p class="mx-1">&#8377;</p>
+              <div class="counter savings-card" data-target="">0</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <h1 class="text-white text-xs md:text-sm xl:text-lg">Savings</h1>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-col w-full h-max max-h-[706px] bg-white drop-shadow-md rounded-lg my-3 xl:mx-6 xl:mr-5 xl:ml-3"
+        >
+          <div
+            class="flex justify-between border-b-2 mx-2 py-3 sm:mx-10 sm:py-4"
+          >
+            <div class="font-open-sans font-bold text-lg xl:text-2xl">
+              Transactions
+            </div>
+            <button
+              id="open--modal"
+              class="block text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-xs px-4 py-1 text-center"
+            >
+              Add +
+            </button>
+          </div>
+          <div class="w-full mb-3 overflow-y-scroll flex">
+            <table
+              id="transaction--table"
+              class="w-full text-sm mx-2 text-left sm:mx-10"
+            >
+              <thead class="text-xs xl:text-base uppercase">
+                <tr>
+                  <th scope="col" class="px-1 md:px-3 py-4 border-opacity-90">
+                    Description
+                  </th>
+                  <th
+                    id="date--head"
+                    scope="col"
+                    class="min-w-[72px] w-1/5 md:w-24 py-4 relative left-4 cursor-pointer"
+                  >
+                    Date
+                  </th>
+                  <th
+                    id="value--head"
+                    scope="col"
+                    class="min-w-[88px] w-1/5 py-4 pr-1 text-right cursor-pointer"
+                  >
+                    Value
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="transactions--list overflow-y-scroll max-h-[500px]"
+              ></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div
+      id="transaction--form"
+      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 z-20 w-full h-full"
+    >
+      <div
+        class="modal--content relative p-4 w-3/4 max-w-md h-full left-1/2 -translate-x-1/2 transform -translate-y-full transition-all duration-500"
+      >
+        <div class="rounded-lg shadow bg-white flex flex-col justify-center">
+          <div class="flex flex-col items-center">
+            <div
+              class="flex justify-between items-center py-4 mx-2 rounded-t border-b-2 w-11/12"
+            >
+              <h3 class="text-lg font-semibold text-gray-900">
+                Add a transaction
+              </h3>
+              <button
+                id="close--modal"
+                type="button"
+                class="text-gray-400 bg-transparent hover:bg-gray-100 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            <div
+              class="relative z-30 w-5/6 mt-4 mb-2 flex border-2 border-gray-300 rounded-md font-ubnutu bg-white"
+            >
+              <button
+                id="income--form"
+                class="w-1/2 flex justify-center border-r-2 px-1 py-2 cursor-pointer text-green-800 bg-gray-100"
+              >
+                Income
+              </button>
+              <button
+                id="expense--form"
+                class="w-1/2 flex justify-center px-1 py-2 ml-0 cursor-pointer text-red-800"
+              >
+                Expense
+              </button>
+            </div>
+          </div>
+
+          <form class="flex flex-col items-center" id="form">
+            <div class="relative z-30 w-5/6 my-2 group flex justify-between">
+              <input
+                type="number"
+                id="value"
+                min="1"
+                name="floating_value"
+                class="block py-2 mr-1 w-full text-xs text-gray-900 bg-transparent border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                required
+              />
+              <label
+                for="floating_value"
+                class="peer-focus:font-medium px-2 absolute text-xs text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Value</label
+              >
+              <input
+                type="date"
+                id="date-picker"
+                value=""
+                name="date"
+                class="block py-2 ml-1 w-full text-xs text-gray-900 bg-transparent border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=""
+                required
+              />
+            </div>
+            <div class="relative z-30 w-5/6 my-2 group">
+              <input
+                type="text"
+                id="description"
+                name="floating_descriptipn"
+                class="block py-2 w-full text-xs text-gray-900 bg-transparent border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                required
+              />
+              <label
+                for="floating_description"
+                class="peer-focus:font-medium px-2 absolute text-xs text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Description</label
+              >
+            </div>
+
+            <div class="border-b-2 w-max text-gray-500 py-2 text-xs">
+              <label for="" class="px-2 text-gray-500">Choose a tag:</label>
+              <select
+                name="income--tags"
+                id="income--tags"
+                class="active--tag tags focus:outline-none px-3"
+                data-type="income"
+              >
+                <option value="Salary">Salary</option>
+                <option value="Business">Business</option>
+                <option value="Extra Income">Extra Income</option>
+                <option value="Other">Other</option>
+              </select>
+              <select
+                name="expense--tags"
+                id="expense--tags"
+                required
+                class="hidden tags focus:outline-none px-3"
+                data-type="expense"
+              >
+                <option value="Food">Food</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Rent">Rent</option>
+                <option value="Bills">Bills</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Transport">Transport</option>
+                <option value="Vacation">Vacation</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Family / Personal">Family / Personal</option>
+                <option value="Work">Work</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-2 my-3 text-center"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="hidden overlay fixed top-0 left-0 w-full h-full bg-slate-900 opacity-0 transition-opacity duration-500 z-10"
+    ></div>
+  </body>
+</html>
