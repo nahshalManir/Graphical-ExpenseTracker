@@ -168,6 +168,7 @@ const tagChart = new Chart(pieChart, {
         color: "black",
         align: "center",
         formatter: (value, context) => {
+          if (tagChart.data.labels.length == 0) return [];
           const datapoints = tagChart.isDatasetVisible(0)
             ? context.chart.data.datasets[0].data
             : context.chart.data.datasets[1].data;
@@ -523,39 +524,38 @@ class ExpenseTracker {
     dailyTransactionsGraph.data.datasets[1].data = expenseData;
     dailyTransactionsGraph.update();
 
-    if (!Object.keys(this.expenseSplit[monthNum]).length) {
-      tagChart.data.labels = [];
-      tagChart.data.datasets[0].data = [];
-      tagChart.data.datasets[1].data = [];
-      tagChart.update();
-      return;
-    }
-
-    console.log(tagType.value);
-
     tagChart.data.labels =
-      tagType.value === "expense"
+      Object.keys(this.incomeSplit[monthNum]).length == 0
         ? this.expenseSplit[monthNum].tag
-        : this.incomeSplit[monthNum].tag;
-    tagChart.data.datasets[0].data = this.expenseSplit[monthNum].value;
-    tagChart.data.datasets[1].data = this.incomeSplit[monthNum].value;
+        : [];
+    tagChart.data.datasets[0].data =
+      this.expenseSplit[monthNum].value == undefined
+        ? []
+        : this.expenseSplit[monthNum].value;
+    tagChart.data.datasets[1].data =
+      this.incomeSplit[monthNum].value == undefined
+        ? []
+        : this.incomeSplit[monthNum].value;
     tagChart.update();
   }
 
   updateTagChart(e) {
-    console.log(e.target.value);
     if (e.target.value === "income") {
-      if (!Object.keys(this.incomeSplit[this.currentMonth]).length) return;
-      tagChart.data.labels = this.incomeSplit[this.currentMonth].tag;
+      tagChart.data.labels =
+        Object.keys(this.incomeSplit[this.currentMonth]).length === 0
+          ? []
+          : this.incomeSplit[this.currentMonth].tag;
       tagChart.hide(0);
       tagChart.show(1);
     } else {
-      if (!Object.keys(this.expenseSplit[this.currentMonth]).length) return;
-      tagChart.data.labels = this.expenseSplit[this.currentMonth].tag;
+      tagChart.data.labels =
+        Object.keys(this.expenseSplit[this.currentMonth]).length === 0
+          ? []
+          : this.expenseSplit[this.currentMonth].tag;
       tagChart.hide(1);
       tagChart.show(0);
     }
-    console.log(tagChart.isDatasetVisible(0), tagChart.isDatasetVisible(1));
+    tagChart.update();
   }
 
   updateCards(month) {
@@ -635,7 +635,6 @@ class ExpenseTracker {
         y = rows[i + 1].getElementsByTagName("td")[n];
         let xVal = n == 1 ? x.innerHTML : Number(x.innerHTML.substring(9));
         let yVal = n == 1 ? y.innerHTML : Number(y.innerHTML.substring(9));
-        console.log(xVal, yVal);
         if (dir == "asc") {
           if (xVal > yVal) {
             shouldSwitch = true;
@@ -676,7 +675,6 @@ class ExpenseTracker {
     );
     localStorage.setItem("incomeSplit", JSON.stringify(this.incomeSplit));
     localStorage.setItem("expenseSplit", JSON.stringify(this.expenseSplit));
-    localStorage.setItem("yearly", JSON.stringify(this));
   }
 
   getLocalStorage() {
