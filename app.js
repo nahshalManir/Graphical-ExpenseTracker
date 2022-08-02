@@ -98,51 +98,8 @@ const tagChart = new Chart(pieChart, {
     datasets: [
       {
         data: [],
-        backgroundColor: [
-          "rgba(38, 70, 83, 0.7)",
-          "rgba(42, 157, 143, 0.7)",
-          "rgba(233, 196, 106, 0.7)",
-          "rgba(244, 162, 97, 0.7)",
-          "rgba(231, 111, 81, 0.7)",
-          "rgba(53, 80, 112, 0.7)",
-          "rgba(109, 89, 122, 0.7)",
-          "rgba(181, 101, 118, 0.7)",
-          "rgba(229, 107, 111, 0.7)",
-          "rgba(234, 172, 139, 0.7)",
-          "rgba(227, 100, 20, 0.7)",
-          "rgba(15, 76, 92, 0.7)",
-        ],
-        borderColor: [
-          "rgba(38, 70, 83)",
-          "rgba(42, 157, 143)",
-          "rgba(233, 196, 106)",
-          "rgba(244, 162, 97)",
-          "rgba(231, 111, 81)",
-          "rgba(53, 80, 112)",
-          "rgba(109, 89, 122)",
-          "rgba(181, 101, 118)",
-          "rgba(229, 107, 111)",
-          "rgba(234, 172, 139)",
-          "rgba(227, 100, 20)",
-          "rgba(15, 76, 92)",
-        ],
-        borderWidth: 1.5,
-        borderJoinStyle: "bevel",
-        spacing: 1,
-      },
-      {
-        backgroundColor: [
-          "rgba(38, 70, 83, 0.7)",
-          "rgba(42, 157, 143, 0.7)",
-          "rgba(233, 196, 106, 0.7)",
-          "rgba(244, 162, 97, 0.7)",
-        ],
-        borderColor: [
-          "rgba(38, 70, 83)",
-          "rgba(42, 157, 143)",
-          "rgba(233, 196, 106)",
-          "rgba(244, 162, 97)",
-        ],
+        backgroundColor: [],
+        borderColor: [],
         borderWidth: 1.5,
         borderJoinStyle: "bevel",
         spacing: 1,
@@ -184,11 +141,8 @@ const tagChart = new Chart(pieChart, {
         display: true,
         labels: {
           usePointStyle: true,
-          padding: 15,
-          boxWidth: 10,
-          font: {
-            size: 12,
-          },
+          padding: 14,
+          boxWidth: 15,
         },
       },
     },
@@ -201,7 +155,53 @@ const tagChart = new Chart(pieChart, {
   },
   plugins: [ChartDataLabels],
 });
-tagChart.hide(1);
+
+const tagChartColor = {
+  income: {
+    backgroundColor: [
+      "rgba(128, 237, 153, 0.7)",
+      "rgba(87, 204, 153, 0.7)",
+      "rgba(56, 163, 165, 0.7)",
+      "rgba(34, 87, 122, 0.7)",
+    ],
+    borderColor: [
+      "rgba(128, 237, 153)",
+      "rgba(87, 204, 153)",
+      "rgba(56, 163, 165)",
+      "rgba(34, 87, 122)",
+    ]
+  },
+  expense: {
+    backgroundColor: [
+      "rgba(38, 70, 83, 0.7)",
+      "rgba(42, 157, 143, 0.7)",
+      "rgba(233, 196, 106, 0.7)",
+      "rgba(244, 162, 97, 0.7)",
+      "rgba(231, 111, 81, 0.7)",
+      "rgba(53, 80, 112, 0.7)",
+      "rgba(109, 89, 122, 0.7)",
+      "rgba(181, 101, 118, 0.7)",
+      "rgba(229, 107, 111, 0.7)",
+      "rgba(234, 172, 139, 0.7)",
+      "rgba(227, 100, 20, 0.7)",
+      "rgba(15, 76, 92, 0.7)",
+    ],
+    borderColor: [
+      "rgba(38, 70, 83)",
+      "rgba(42, 157, 143)",
+      "rgba(233, 196, 106)",
+      "rgba(244, 162, 97)",
+      "rgba(231, 111, 81)",
+      "rgba(53, 80, 112)",
+      "rgba(109, 89, 122)",
+      "rgba(181, 101, 118)",
+      "rgba(229, 107, 111)",
+      "rgba(234, 172, 139)",
+      "rgba(227, 100, 20)",
+      "rgba(15, 76, 92)",
+    ],
+  }
+};
 
 const responsiveFonts = () => {
   if (window.outerWidth >= 640) {
@@ -230,24 +230,6 @@ const monthNames = [
   "Nov",
   "Dec",
 ];
-
-const Tags = {
-  income: ["Salary", "Business", "Extra Income", "Other"],
-  expense: [
-    "Food",
-    "Shopping",
-    "Rent",
-    "Bills",
-    "Healthcare",
-    "Transport",
-    "Vacation",
-    "Groceries",
-    "Entertainment",
-    "Family / Personal",
-    "Work",
-    "Other",
-  ],
-};
 
 incomeForm.addEventListener("click", () => {
   incomeTags.classList.remove("hidden");
@@ -513,48 +495,70 @@ class ExpenseTracker {
   }
 
   updateCharts(monthNum) {
-    const expenseData = this.dailyExpenseTotals[monthNum].filter((data) => {
-      return data != null;
-    });
-    const incomeData = this.dailyIncomeTotals[monthNum].filter((data) => {
-      return data != null;
-    });
+    const expenseData = this.dailyExpenseTotals[monthNum].filter(
+      (data) => data != null
+    );
+    const incomeData = this.dailyIncomeTotals[monthNum].filter(
+      (data) => data != null
+    );
 
     dailyTransactionsGraph.data.datasets[0].data = incomeData;
     dailyTransactionsGraph.data.datasets[1].data = expenseData;
     dailyTransactionsGraph.update();
 
-    tagChart.data.labels =
-      Object.keys(this.incomeSplit[monthNum]).length == 0
-        ? this.expenseSplit[monthNum].tag
-        : [];
-    tagChart.data.datasets[0].data =
-      this.expenseSplit[monthNum].value == undefined
-        ? []
-        : this.expenseSplit[monthNum].value;
-    tagChart.data.datasets[1].data =
-      this.incomeSplit[monthNum].value == undefined
-        ? []
-        : this.incomeSplit[monthNum].value;
+    if (tagType.value === "expense") {
+      tagChart.data.labels =
+        Object.keys(this.expenseSplit[monthNum]).length == 0
+          ? []
+          : this.expenseSplit[monthNum].tag;
+      tagChart.data.datasets[0].data =
+        this.expenseSplit[monthNum].value == undefined
+          ? []
+          : this.expenseSplit[monthNum].value;
+      tagChart.data.datasets[0].backgroundColor = tagChartColor.expense.backgroundColor;
+      tagChart.data.datasets[0].borderColor = tagChartColor.expense.borderColor;
+    } else {
+      tagChart.data.labels =
+        Object.keys(this.incomeSplit[monthNum]).length == 0
+          ? []
+          : this.incomeSplit[monthNum].tag;
+      tagChart.data.datasets[0].data =
+        this.incomeSplit[monthNum].value == undefined
+          ? []
+          : this.incomeSplit[monthNum].value;
+      tagChart.data.datasets[0].backgroundColor = tagChartColor.income.backgroundColor;
+      tagChart.data.datasets[0].borderColor = tagChartColor.income.borderColor;
+    }
+
     tagChart.update();
+    console.log(tagChart.data);
   }
 
   updateTagChart(e) {
     if (e.target.value === "income") {
+      tagChart.data.datasets[0].data =
+        this.incomeSplit[this.currentMonth].value == undefined
+          ? []
+          : this.incomeSplit[this.currentMonth].value;
       tagChart.data.labels =
         Object.keys(this.incomeSplit[this.currentMonth]).length === 0
           ? []
           : this.incomeSplit[this.currentMonth].tag;
-      tagChart.hide(0);
-      tagChart.show(1);
+      tagChart.data.datasets[0].backgroundColor = tagChartColor.income.backgroundColor;
+      tagChart.data.datasets[0].borderColor = tagChartColor.income.borderColor;
     } else {
+      tagChart.data.datasets[0].data =
+        this.expenseSplit[(this, this.currentMonth)].value == undefined
+          ? []
+          : this.expenseSplit[(this, this.currentMonth)].value;
       tagChart.data.labels =
         Object.keys(this.expenseSplit[this.currentMonth]).length === 0
           ? []
           : this.expenseSplit[this.currentMonth].tag;
-      tagChart.hide(1);
-      tagChart.show(0);
+      tagChart.data.datasets[0].backgroundColor = tagChartColor.expense.backgroundColor;
+      tagChart.data.datasets[0].borderColor = tagChartColor.expense.borderColor;
     }
+
     tagChart.update();
   }
 
@@ -584,22 +588,22 @@ class ExpenseTracker {
       if (!this.dailyIncomeTotals[month][Number(curDate) - 1].y)
         this.dailyIncomeTotals[month].splice(Number(curDate) - 1, 1);
       this.monthlyIncome[month] -= value;
-      const index = this.incomeSplit[month].tag.findIndex((data) => {
-        data === tag;
-      });
+      const index = this.incomeSplit[month].tag.findIndex(
+        (data) => data === tag
+      );
       this.incomeSplit[month].value[index] -= value;
       if (this.incomeSplit[month].value[index] == 0) {
-        this.monthlyIncome[month].tag.splice(index, 1);
-        this.monthlyIncome[month].value.splice(index, 1);
+        this.incomeSplit[month].tag.splice(index, 1);
+        this.incomeSplit[month].value.splice(index, 1);
       }
     } else {
       this.dailyExpenseTotals[month][Number(curDate) - 1].y -= value;
       if (!this.dailyExpenseTotals[month][Number(curDate) - 1].y)
         this.dailyExpenseTotals[month].splice(Number(curDate) - 1, 1);
       this.monthlyExpense[month] -= value;
-      const index = this.expenseSplit[month].tag.findIndex((data) => {
-        return data === tag;
-      });
+      const index = this.expenseSplit[month].tag.findIndex(
+        (data) => data === tag
+      );
       this.expenseSplit[month].value[index] -= value;
       if (this.expenseSplit[month].value[index] == 0) {
         this.expenseSplit[month].tag.splice(index, 1);
